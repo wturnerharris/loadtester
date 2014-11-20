@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Load Tester</title>
+		<script>
+		var loadImg = function(img, renderBg){
+			var parent = img.parentElement,
+				bg = null,
+				show = function(){
+					parent.className += parent.className ? ' loaded' : 'loaded';
+				};
+		
+			if(renderBg){
+				bg = document.createElement('div');
+			
+				bg.className = 'bg';
+				bg.style.backgroundImage='url("'+img.src+'")';
+			
+				parent.insertBefore(bg, img);
+			};
+		
+			setTimeout(show, 20);
+		}, loadImgAlt = function(c){
+			var b=c.parentNode,
+				a="loaded",
+				d=document.getElementsByTagName("html")[0].className,
+				e=(d.indexOf("lt-ie9")>-1);
+			if(typeof(c.parentNode)!=="object"||!b){
+				return;
+			}
+			bg=document.createElement("div");
+			bg.className="bg";
+			if(e){
+				b.className+=b.className?" stretch":"stretch";
+				bg.style.cssText="background:none;-ms-filter:\"progid:DXImageTransform.Microsoft.AlphaImageLoader( src='"+c.src+"', sizingMethod='scale')\"";
+			}else{
+				bg.style.backgroundImage='url("'+c.src+'")';
+			}
+			b.removeChild(c);
+			b.insertBefore(bg,b.firstChild);
+			setTimeout(function(){b.className+=b.className?" "+a:a},250);
+		}, lazyLoad = function(c){
+			// write function
+		};
+
+		</script>
+		<style>
+		@-webkit-keyframes spin{from{-webkit-transform:rotate(0);transform:rotate(0);opacity:.4}50%{-webkit-transform:rotate(180deg);transform:rotate(180deg);opacity:1}to{-webkit-transform:rotate(360deg);transform:rotate(360deg);opacity:.4}}
+		@-moz-keyframes spin{from{-moz-transform:rotate(0);transform:rotate(0);opacity:.4}50%{-moz-transform:rotate(180deg);transform:rotate(180deg);opacity:1}to{-moz-transform:rotate(360deg);transform:rotate(360deg);opacity:.4}}
+		@-ms-keyframes spin{from{-ms-transform:rotate(0);transform:rotate(0);opacity:.4}50%{-ms-transform:rotate(180deg);transform:rotate(180deg);opacity:1}to{-ms-transform:rotate(360deg);transform:rotate(360deg);opacity:.4}}
+		@-o-keyframes spin{from{-o-transform:rotate(0);transform:rotate(0);opacity:.4}50%{-o-transform:rotate(180deg);transform:rotate(180deg);opacity:1}to{-o-transform:rotate(360deg);transform:rotate(360deg);opacity:.4}}@keyframes spin{from{transform:rotate(0);opacity:.4}50%{transform:rotate(180deg);opacity:1}to{transform:rotate(360deg);opacity:.4}}
+		html,body{margin:0;}
+		ul{list-style:none;margin:0;padding:0;}
+		li{position:relative;}
+		li::before {
+			-webkit-animation: spin 2s linear infinite;
+			-moz-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			content: '';
+			border: 2px solid white;
+			border-color: #ddd6c3 transparent #ddd6c3 #ddd6c3;
+			border-radius: 50%;
+			height: 40px;
+			left: 50%;
+			margin: -20px 0 0 -20px;
+			position: absolute;
+			top: 50%;
+			width: 40px;
+			z-index: 1;
+		}
+		li.loaded::before{content:none;}
+		#Main{margin:0 auto;width:940px;max-width:100%;}
+		img{display:none;}
+		.bg{opacity:0;width:100%;padding-top:44%;height:0;background-size:cover;transition:opacity 250ms linear;}
+		.loaded .bg{opacity:1;}
+		</style>
+	</head>
+	<body>
+		<section id="Main">
+			<ul>
+				<li class="loading"><img src="./img/flickr1.jpg" alt="" onload="loadImg(this,true);"/></li>
+				<li class="loading"><img src="./img/flickr2.jpg" alt="" onload="loadImgAlt(this);"/></li>
+				<li class="loading"><img data-src="./img/flickr3.jpg" alt="" onload="lazyLoad(this);"/></li>
+				<li class="loading"><img data-src="./img/flickr4.jpg" alt="" onload="lazyLoad(this);"/></li>
+			</ul>
+		</section>
+	</body>
+</html>
